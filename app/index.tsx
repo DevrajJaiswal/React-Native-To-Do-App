@@ -1,15 +1,46 @@
-import { Text, View } from "react-native";
+import DateSelector from "@/components/DateSelector";
+import FilterTab from "@/components/FilterTab";
+import Header from "@/components/Header";
+import TaskCard from "@/components/TaskCard";
+import Colors from "@/constants/Color";
+import { FilterOptions, TASKS } from "@/constants/tasks";
+import { StatusBar } from "expo-status-bar";
+import { useState } from "react";
+import { FlatList, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Index() {
+  const insets = useSafeAreaInsets();
+  const [activeFilter, setActiveFilter] = useState<FilterOptions>("All");
+
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
+      <StatusBar style="light" />
+      <FlatList
+        data={TASKS}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <TaskCard task={item} />}
+        ListHeaderComponent={
+          <>
+            {/* {Header} */}
+            <Header />
+            {/* {DateSelector} */}
+            <DateSelector />
+            {/* {FilterTab} */}
+            <FilterTab selected={activeFilter} onSelect={setActiveFilter} />
+          </>
+        }
+        contentContainerStyle={styles.list}
+        showsVerticalScrollIndicator={false}
+      />
+      <Text>Index</Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.background,
+  },
+});
