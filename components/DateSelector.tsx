@@ -63,7 +63,7 @@ export default DateSelector;
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
     gap: 8,
     paddingVertical: 10,
   },

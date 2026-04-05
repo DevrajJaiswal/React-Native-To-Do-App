@@ -1,3 +1,5 @@
+import AddTaskButton from "@/components/AddTaskButton";
+import AddTaskForm from "@/components/AddTaskForm";
 import DateSelector from "@/components/DateSelector";
 import FilterTab from "@/components/FilterTab";
 import Header from "@/components/Header";
@@ -6,12 +8,13 @@ import Colors from "@/constants/Color";
 import { FilterOptions, TASKS } from "@/constants/tasks";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Index() {
   const insets = useSafeAreaInsets();
   const [activeFilter, setActiveFilter] = useState<FilterOptions>("All");
+  const [showForm, setShowForm] = useState(false);
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -33,7 +36,8 @@ export default function Index() {
         contentContainerStyle={styles.list}
         showsVerticalScrollIndicator={false}
       />
-      <Text>Index</Text>
+      <AddTaskButton onOpen={() => setShowForm(true)} />
+      {showForm && <AddTaskForm onClose={() => setShowForm(false)} />}
     </View>
   );
 }

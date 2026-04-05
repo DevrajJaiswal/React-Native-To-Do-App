@@ -40,6 +40,7 @@ export default FilterTab;
 const styles = StyleSheet.create({
   container: {
     gap: 10,
+    marginHorizontal: 20,
     paddingVertical: 12,
   },
   tab: {

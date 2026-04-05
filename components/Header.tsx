@@ -15,7 +15,7 @@ const Header = () => {
           size={22}
           color={Colors.textPrimary}
         />
-      </TouchableOpacity>{" "}
+      </TouchableOpacity>
     </View>
   );
 };

@@ -1,4 +1,5 @@
 import Colors from "@/constants/Color";
+import { Task } from "@/constants/tasks";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -6,14 +7,14 @@ import { StyleSheet, Text, View } from "react-native";
 const STATUS_COLOR = {
   Done: Colors.statusDone,
   "In Progress": Colors.statusInProgress,
-  "To-do": Colors.statusToDo,
+  "To Do": Colors.statusToDo,
 };
 
 type TaskCardProps = {
   task: Task;
 };
 
-const TaskCard = ({ task }) => {
+const TaskCard = ({ task }: TaskCardProps) => {
   return (
     <View style={styles.card}>
       <View style={styles.content}>
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
   iconBadge: {
     width: 42,
     height: 42,
-    borderRadius: "center",
+    justifyContent: "center",
     alignItems: "center",
     marginLeft: 14,
   },
