@@ -1,8 +1,15 @@
 import Colors from "@/constants/Color";
 import { Task, TASK_CATEGORIES } from "@/constants/tasks";
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import {
+  Alert,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 const STATUS_COLOR = {
   Done: Colors.statusDone,
@@ -14,9 +21,74 @@ type TaskCardProps = {
   task: Task;
 };
 
-const TaskCard = ({ task }: TaskCardProps) => {
+const TaskCard = ({ task, setTasks, setCompletedTasks }: any) => {
+  const [showActions, setShowActions] = useState(false);
+  const deleteTask = (taskId: string) => {
+    Alert.alert("Delete Task", "Are you sure you want to delete this task?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: () => {
+          setTasks((current: any) =>
+            current.filter((task: any) => task.id !== taskId),
+          );
+        },
+      },
+    ]);
+  };
+
+  const markAsDone = (taskId: string) => {
+    setTasks((current: any) => {
+      const taskToMove = current.find((task: any) => task.id === taskId);
+
+      if (!taskToMove) return current;
+
+      const updatedTask = { ...taskToMove, status: "Done" };
+
+      setCompletedTasks((prev: any) => [...prev, updatedTask]);
+
+      return current.filter((task: any) => task.id !== taskId);
+    });
+  };
+
   return (
-    <View style={styles.card}>
+    <Pressable
+      style={styles.card}
+      onLongPress={() => setShowActions(!showActions)}
+      delayLongPress={500}
+    >
+      {showActions && (
+        <View style={styles.actionBar}>
+          <TouchableOpacity
+            style={styles.actionBtn}
+            onPress={() => markAsDone(task.id)}
+          >
+            <Ionicons
+              name="checkmark-circle"
+              size={18}
+              color={Colors.statusDone}
+            />
+            <Text style={styles.actionText}>Done</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.actionBtn}
+            onPress={() => deleteTask(task.id)}
+          >
+            <Ionicons
+              name="trash-outline"
+              size={18}
+              color={Colors.statusToDo}
+            />
+            <Text style={styles.actionText}>Delete</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
       <View style={styles.content}>
         <Text style={styles.category}>
           {TASK_CATEGORIES.find((cat) => cat.value === task.category)?.label}
@@ -52,7 +124,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
           color={Colors.textPrimary}
         />
       </View>
-    </View>
+    </Pressable>
   );
 };
 
@@ -109,5 +181,31 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginLeft: 14,
+  },
+  actionBar: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 12,
+    borderTopColor: Colors.border,
+    paddingTop: 10,
+  },
+
+  actionBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    backgroundColor: Colors.surfaceLight,
+  },
+
+  actionText: {
+    fontSize: 13,
+    fontWeight: "500",
+    color: Colors.textPrimary,
   },
 });

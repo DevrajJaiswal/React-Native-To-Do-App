@@ -68,8 +68,8 @@ const AddTaskForm = ({ onClose, setTasks }: any) => {
             <TextInput
               style={styles.input}
               value={title}
-              placeholder="Task title"
-              placeholderTextColor={Colors.textPrimary}
+              placeholder="Title"
+              placeholderTextColor={Colors.textSecondary}
               onChangeText={(text) => setTitle(text)}
             />
             <View style={styles.pickerContainer}>
@@ -79,6 +79,7 @@ const AddTaskForm = ({ onClose, setTasks }: any) => {
                 placeholder="category"
                 onValueChange={(itemValue) => setCategory(itemValue)}
               >
+                <Picker.Item label="Select Category" value={null} />
                 {TASK_CATEGORIES.map((cat, i) => (
                   <Picker.Item
                     // style={styles.pickerOptionText}

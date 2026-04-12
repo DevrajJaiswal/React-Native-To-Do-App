@@ -5,7 +5,12 @@ import FilterTab from "@/components/FilterTab";
 import Header from "@/components/Header";
 import TaskCard from "@/components/TaskCard";
 import Colors from "@/constants/Color";
-import { FilterOptions, TASKS } from "@/constants/tasks";
+import {
+  COMPLETED_TASKS,
+  FilterOptions,
+  IN_PROGRESS_TASKS,
+  TASKS,
+} from "@/constants/tasks";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
@@ -16,14 +21,35 @@ export default function Index() {
   const insets = useSafeAreaInsets();
   const [activeFilter, setActiveFilter] = useState<FilterOptions>("All");
   const [showForm, setShowForm] = useState(false);
+  const [completedTasks, setCompletedTasks] = useState(COMPLETED_TASKS);
+  const [inProgressTasks, setInProgressTasks] = useState(IN_PROGRESS_TASKS);
+
+  const filteredTasks = (() => {
+    switch (activeFilter) {
+      case "To Do":
+        return tasks;
+      case "In Progress":
+        return inProgressTasks;
+      case "Done":
+        return completedTasks;
+      default:
+        return [...tasks, ...inProgressTasks];
+    }
+  })();
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <StatusBar style="light" />
       <FlatList
-        data={tasks}
+        data={filteredTasks}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <TaskCard task={item} />}
+        renderItem={({ item }) => (
+          <TaskCard
+            task={item}
+            setTasks={setTasks}
+            setCompletedTasks={setCompletedTasks}
+          />
+        )}
         ListHeaderComponent={
           <>
             {/* {Header} */}
