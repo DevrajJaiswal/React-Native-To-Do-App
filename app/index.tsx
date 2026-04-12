@@ -12,6 +12,7 @@ import { FlatList, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Index() {
+  const [tasks, setTasks] = useState(TASKS);
   const insets = useSafeAreaInsets();
   const [activeFilter, setActiveFilter] = useState<FilterOptions>("All");
   const [showForm, setShowForm] = useState(false);
@@ -20,7 +21,7 @@ export default function Index() {
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <StatusBar style="light" />
       <FlatList
-        data={TASKS}
+        data={tasks}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <TaskCard task={item} />}
         ListHeaderComponent={
@@ -33,11 +34,12 @@ export default function Index() {
             <FilterTab selected={activeFilter} onSelect={setActiveFilter} />
           </>
         }
-        contentContainerStyle={styles.list}
         showsVerticalScrollIndicator={false}
       />
       <AddTaskButton onOpen={() => setShowForm(true)} />
-      {showForm && <AddTaskForm onClose={() => setShowForm(false)} />}
+      {showForm && (
+        <AddTaskForm onClose={() => setShowForm(false)} setTasks={setTasks} />
+      )}
     </View>
   );
 }

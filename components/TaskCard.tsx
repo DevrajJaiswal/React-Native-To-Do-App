@@ -1,5 +1,5 @@
 import Colors from "@/constants/Color";
-import { Task } from "@/constants/tasks";
+import { Task, TASK_CATEGORIES } from "@/constants/tasks";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -18,7 +18,9 @@ const TaskCard = ({ task }: TaskCardProps) => {
   return (
     <View style={styles.card}>
       <View style={styles.content}>
-        <Text style={styles.category}>{task.category}</Text>
+        <Text style={styles.category}>
+          {TASK_CATEGORIES.find((cat) => cat.value === task.category)?.label}
+        </Text>
         <Text style={styles.title}>{task.title}</Text>
 
         <View style={styles.footer}>
@@ -28,7 +30,9 @@ const TaskCard = ({ task }: TaskCardProps) => {
               size={14}
               color={Colors.primary}
             ></Ionicons>
-            <Text style={styles.time}>{task.time}</Text>
+            <Text style={styles.time}>
+              {task.time} | {task.date}
+            </Text>
           </View>
 
           <Text style={[styles.status, { color: STATUS_COLOR[task.status] }]}>
