@@ -19,10 +19,10 @@ const EditTaskForm = ({ onClose, setTasks, editTaskData }: any) => {
   const [category, setCategory] = useState(editTaskData.category);
 
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [date, setDate] = useState<Date>(editTaskData.date);
+  const [date, setDate] = useState<Date | null>(new Date());
 
   const [showTimePicker, setShowTimePicker] = useState(false);
-  const [time, setTime] = useState<Date>(editTaskData.date);
+  const [time, setTime] = useState<Date | null>(new Date());
 
   const onChangeDate = (event: any, selectedDate: Date) => {
     setShowDatePicker(false);
@@ -49,7 +49,7 @@ const EditTaskForm = ({ onClose, setTasks, editTaskData }: any) => {
       category: category,
       date: date.toLocaleDateString(),
       time: time.toLocaleTimeString(),
-      status: "In Progress",
+      status: editTaskData.status,
       icon: { name: "reload", backgroundColor: Colors.statusInProgress },
     };
 
@@ -84,10 +84,7 @@ const EditTaskForm = ({ onClose, setTasks, editTaskData }: any) => {
                 placeholder="category"
                 onValueChange={(itemValue) => setCategory(itemValue)}
               >
-                <Picker.Item
-                  label="Select Category"
-                  value={editTaskData.category}
-                />
+                <Picker.Item label="Select Category" value={null} />
                 {TASK_CATEGORIES.map((cat, i) => (
                   <Picker.Item
                     // style={styles.pickerOptionText}
