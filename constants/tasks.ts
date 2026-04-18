@@ -25,9 +25,6 @@ export const TASKS: Task[] = [
     status: "To Do",
     icon: { name: "time", backgroundColor: "#EF4444" },
   },
-];
-
-export const IN_PROGRESS_TASKS = [
   {
     id: "2",
     category: "api_int",
@@ -37,9 +34,6 @@ export const IN_PROGRESS_TASKS = [
     status: "In Progress",
     icon: { name: "reload", backgroundColor: "#F59E0B" },
   },
-];
-
-export const COMPLETED_TASKS = [
   {
     id: "3",
     category: "mobile_dev",
