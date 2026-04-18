@@ -6,13 +6,7 @@ import FilterTab from "@/components/FilterTab";
 import Header from "@/components/Header";
 import TaskCard from "@/components/TaskCard";
 import Colors from "@/constants/Color";
-import {
-  COMPLETED_TASKS,
-  FilterOptions,
-  IN_PROGRESS_TASKS,
-  TASKS,
-  Task,
-} from "@/constants/tasks";
+import { FilterOptions, TASKS, Task } from "@/constants/tasks";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
@@ -24,22 +18,12 @@ export default function Index() {
   const [activeFilter, setActiveFilter] = useState<FilterOptions>("All");
   const [showForm, setShowForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
-  const [editTaskData, setEditTaskData] = useState<Task | null>();
-  const [completedTasks, setCompletedTasks] = useState(COMPLETED_TASKS);
-  const [inProgressTasks, setInProgressTasks] = useState(IN_PROGRESS_TASKS);
+  const [editTaskData, setEditTaskData] = useState<Task | null>(null);
 
-  const filteredTasks = (() => {
-    switch (activeFilter) {
-      case "To Do":
-        return tasks;
-      case "In Progress":
-        return inProgressTasks;
-      case "Done":
-        return completedTasks;
-      default:
-        return [...tasks, ...inProgressTasks];
-    }
-  })();
+  const filteredTasks = tasks.filter((task) => {
+    if (activeFilter === "All") return true;
+    return task.status === activeFilter;
+  });
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -51,7 +35,6 @@ export default function Index() {
           <TaskCard
             task={item}
             setTasks={setTasks}
-            setCompletedTasks={setCompletedTasks}
             onOpen={() => setShowEditForm(true)}
             setEditTaskData={setEditTaskData}
           />

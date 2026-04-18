@@ -45,24 +45,29 @@ const TaskCard = ({
         },
       },
     ]);
+    setShowActions(false);
   };
 
   const markAsDone = (taskId: string) => {
-    setTasks((current: any) => {
-      const taskToMove = current.find((task: any) => task.id === taskId);
-
-      if (!taskToMove) return current;
-
-      const updatedTask = { ...taskToMove, status: "Done" };
-
-      setCompletedTasks((prev: any) => [...prev, updatedTask]);
-
-      return current.filter((task: any) => task.id !== taskId);
-    });
+    setTasks((current: any) =>
+      current.filter((task: any) =>
+        task.id === taskId ? (task.status = "Done") : task,
+      ),
+    );
+    setShowActions(false);
+  };
+  const markAsInProgress = (taskId: string) => {
+    setTasks((current: any) =>
+      current.filter((task: any) =>
+        task.id === taskId ? (task.status = "In Progress") : task,
+      ),
+    );
+    setShowActions(false);
   };
   const editTask = (taskId: string) => {
     setEditTaskData(task);
     onOpen();
+    setShowActions(false);
   };
 
   return (
@@ -73,6 +78,17 @@ const TaskCard = ({
     >
       {showActions && (
         <View style={styles.actionBar}>
+          <TouchableOpacity
+            style={styles.actionBtn}
+            onPress={() => markAsInProgress(task.id)}
+          >
+            <Ionicons
+              name="reload-circle"
+              size={18}
+              color={Colors.statusInProgress}
+            />
+            <Text style={styles.actionText}>In Progress</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.actionBtn}
             onPress={() => markAsDone(task.id)}
@@ -88,11 +104,7 @@ const TaskCard = ({
             style={styles.actionBtn}
             onPress={() => editTask(task.id)}
           >
-            <Ionicons
-              name="create-outline"
-              size={18}
-              color={Colors.statusDone}
-            />
+            <Ionicons name="create-outline" size={18} color={Colors.primary} />
             <Text style={styles.actionText}>Edit</Text>
           </TouchableOpacity>
           <TouchableOpacity
