@@ -1,50 +1,78 @@
-# Welcome to your Expo app 👋
+# React Native To-Do App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A task manager app built with React Native and Expo Router.  
+You can create, edit, delete, filter, and update task status in a clean mobile UI.
 
-## Get started
+## Features
 
-1. Install dependencies
+- ✅ Add new tasks with title, category, date, and time
+- ✏️ Edit existing tasks
+- 🗑️ Delete tasks with confirmation alert
+- 🔄 Change task status to `To Do`, `In Progress`, or `Done`
+- 🎯 Filter tasks by status (`All`, `To Do`, `In Progress`, `Done`)
+- 👆 Long-press a task card to open quick actions
+- 🧠 Uses local in-memory state (`useState`) for task management
 
-   ```bash
-   npm install
-   ```
+## Tech Stack
 
-2. Start the app
+- ⚛️ React Native
+- 🚀 Expo
+- 🧭 Expo Router
+- 📘 TypeScript
+- 🪝 React Hooks
+- 📅 `@react-native-community/datetimepicker`
+- 📋 `@react-native-picker/picker`
 
-   ```bash
-   npx expo start
-   ```
+## Project Structure
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```text
+app/
+  _layout.tsx
+  index.tsx
+components/
+  AddTaskButton.tsx
+  AddTaskForm.tsx
+  DateSelector.tsx
+  EditTaskForm.tsx
+  FilterTab.tsx
+  Header.tsx
+  TaskCard.tsx
+constants/
+  Color.ts
+  tasks.ts
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Getting Started
 
-## Learn more
+### 1. Install dependencies
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+npm install
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### 2. Run the app
 
-## Join the community
+```bash
+npm run start
+# or
+npx expo start
+```
 
-Join our community of developers creating universal apps.
+Then open on:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- 🤖 Android emulator/device: press `a`
+- 🍎 iOS simulator/device (macOS): press `i`
+- 🌐 Web: press `w`
+
+## Available Scripts
+
+- ▶️ `npm run start` - Start Expo dev server
+- 🤖 `npm run android` - Start directly for Android
+- 🍎 `npm run ios` - Start directly for iOS
+- 🌐 `npm run web` - Start for web
+- 🧹 `npm run lint` - Run lint checks
+
+## Notes
+
+- 📝 Initial sample tasks are defined in `constants/tasks.ts`.
+- 💾 Data is not persisted yet (no AsyncStorage or backend in current version).
