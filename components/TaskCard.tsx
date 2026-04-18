@@ -21,7 +21,13 @@ type TaskCardProps = {
   task: Task;
 };
 
-const TaskCard = ({ task, setTasks, setCompletedTasks }: any) => {
+const TaskCard = ({
+  task,
+  setTasks,
+  setCompletedTasks,
+  onOpen,
+  setEditTaskData,
+}: any) => {
   const [showActions, setShowActions] = useState(false);
   const deleteTask = (taskId: string) => {
     Alert.alert("Delete Task", "Are you sure you want to delete this task?", [
@@ -54,6 +60,10 @@ const TaskCard = ({ task, setTasks, setCompletedTasks }: any) => {
       return current.filter((task: any) => task.id !== taskId);
     });
   };
+  const editTask = (taskId: string) => {
+    setEditTaskData(task);
+    onOpen();
+  };
 
   return (
     <Pressable
@@ -74,7 +84,17 @@ const TaskCard = ({ task, setTasks, setCompletedTasks }: any) => {
             />
             <Text style={styles.actionText}>Done</Text>
           </TouchableOpacity>
-
+          <TouchableOpacity
+            style={styles.actionBtn}
+            onPress={() => editTask(task.id)}
+          >
+            <Ionicons
+              name="create-outline"
+              size={18}
+              color={Colors.statusDone}
+            />
+            <Text style={styles.actionText}>Edit</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.actionBtn}
             onPress={() => deleteTask(task.id)}

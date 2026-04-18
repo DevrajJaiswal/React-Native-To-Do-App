@@ -18,7 +18,7 @@ export type Task = {
 export const TASKS: Task[] = [
   {
     id: "1",
-    category: "Backend Integration",
+    category: "web_dev",
     title: "API Integration for Tasks",
     date: "Sat Apr 11 2026",
     time: "04:00 PM",
@@ -30,7 +30,7 @@ export const TASKS: Task[] = [
 export const IN_PROGRESS_TASKS = [
   {
     id: "2",
-    category: "Grocery Shopping App Design",
+    category: "api_int",
     title: "Create Wireframes",
     date: "Sat Apr 11 2026",
     time: "11:30 AM",
@@ -42,7 +42,7 @@ export const IN_PROGRESS_TASKS = [
 export const COMPLETED_TASKS = [
   {
     id: "3",
-    category: "Mobile App Development",
+    category: "mobile_dev",
     title: "Setup React Native Project",
     date: "Sat Apr 11 2026",
     time: "01:00 PM",

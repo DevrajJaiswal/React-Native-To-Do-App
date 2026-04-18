@@ -1,6 +1,7 @@
 import AddTaskButton from "@/components/AddTaskButton";
 import AddTaskForm from "@/components/AddTaskForm";
 import DateSelector from "@/components/DateSelector";
+import EditTaskForm from "@/components/EditTaskForm";
 import FilterTab from "@/components/FilterTab";
 import Header from "@/components/Header";
 import TaskCard from "@/components/TaskCard";
@@ -10,6 +11,7 @@ import {
   FilterOptions,
   IN_PROGRESS_TASKS,
   TASKS,
+  Task,
 } from "@/constants/tasks";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
@@ -21,6 +23,8 @@ export default function Index() {
   const insets = useSafeAreaInsets();
   const [activeFilter, setActiveFilter] = useState<FilterOptions>("All");
   const [showForm, setShowForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [editTaskData, setEditTaskData] = useState<Task | null>();
   const [completedTasks, setCompletedTasks] = useState(COMPLETED_TASKS);
   const [inProgressTasks, setInProgressTasks] = useState(IN_PROGRESS_TASKS);
 
@@ -48,6 +52,8 @@ export default function Index() {
             task={item}
             setTasks={setTasks}
             setCompletedTasks={setCompletedTasks}
+            onOpen={() => setShowEditForm(true)}
+            setEditTaskData={setEditTaskData}
           />
         )}
         ListHeaderComponent={
@@ -65,6 +71,13 @@ export default function Index() {
       <AddTaskButton onOpen={() => setShowForm(true)} />
       {showForm && (
         <AddTaskForm onClose={() => setShowForm(false)} setTasks={setTasks} />
+      )}
+      {showEditForm && (
+        <EditTaskForm
+          onClose={() => setShowEditForm(false)}
+          setTasks={setTasks}
+          editTaskData={editTaskData}
+        />
       )}
     </View>
   );
