@@ -8,7 +8,7 @@ type FilterTabProps = {
   onSelect: (filter: FilterOptions) => void;
 };
 
-const FilterTab = ({ selected, onSelect }: any) => {
+const FilterTab = ({ selected, onSelect }: FilterTabProps) => {
   return (
     <ScrollView
       horizontal

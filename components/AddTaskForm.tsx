@@ -1,5 +1,5 @@
 import Colors from "@/constants/Color";
-import { TASK_CATEGORIES } from "@/constants/tasks";
+import { Task, TASK_CATEGORIES } from "@/constants/tasks";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
@@ -14,9 +14,14 @@ import {
   View,
 } from "react-native";
 
-const AddTaskForm = ({ onClose, setTasks }: any) => {
+type AddTaskFormProps = {
+  onClose: () => void;
+  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+};
+
+const AddTaskForm = ({ onClose, setTasks }: AddTaskFormProps) => {
   const [title, setTitle] = useState("");
-  const [category, setCategory] = useState(TASK_CATEGORIES[0]);
+  const [category, setCategory] = useState<string>(TASK_CATEGORIES[0].value);
 
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [date, setDate] = useState(new Date());
@@ -43,16 +48,16 @@ const AddTaskForm = ({ onClose, setTasks }: any) => {
       Alert.alert("All fields are required");
       return;
     }
-    const newTask = {
+    const newTask: Task = {
       id: Date.now().toString(),
-      title: title,
-      category: category,
+      title,
+      category,
       date: date.toLocaleDateString(),
       time: time.toLocaleTimeString(),
       status: "To Do",
       icon: { name: "time", backgroundColor: Colors.statusToDo },
     };
-    setTasks((prevTasks: any) => [...prevTasks, newTask]);
+    setTasks((prevTasks) => [...prevTasks, newTask]);
     onClose();
   };
 

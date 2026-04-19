@@ -1,7 +1,9 @@
 import Colors from "@/constants/Color";
-import { TASK_CATEGORIES } from "@/constants/tasks";
+import { Task, TASK_CATEGORIES } from "@/constants/tasks";
 import { Ionicons } from "@expo/vector-icons";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
 import React, { useState } from "react";
 import {
@@ -14,24 +16,36 @@ import {
   View,
 } from "react-native";
 
-const EditTaskForm = ({ onClose, setTasks, editTaskData }: any) => {
-  const [title, setTitle] = useState(editTaskData.title);
-  const [category, setCategory] = useState(editTaskData.category);
+type EditTaskFormProps = {
+  onClose: () => void;
+  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+  editTaskData: Task | null;
+};
+
+const EditTaskForm = ({
+  onClose,
+  setTasks,
+  editTaskData,
+}: EditTaskFormProps) => {
+  const [title, setTitle] = useState(editTaskData?.title ?? "");
+  const [category, setCategory] = useState<string>(
+    editTaskData?.category ?? TASK_CATEGORIES[0].value,
+  );
 
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [date, setDate] = useState<Date | null>(new Date());
+  const [date, setDate] = useState<Date>(new Date());
 
   const [showTimePicker, setShowTimePicker] = useState(false);
-  const [time, setTime] = useState<Date | null>(new Date());
+  const [time, setTime] = useState<Date>(new Date());
 
-  const onChangeDate = (event: any, selectedDate: Date) => {
+  const onChangeDate = (event: DateTimePickerEvent, selectedDate?: Date) => {
     setShowDatePicker(false);
     if (selectedDate) {
       setDate(selectedDate);
     }
   };
 
-  const onChangeTime = (event: any, selectedTime: any) => {
+  const onChangeTime = (event: DateTimePickerEvent, selectedTime?: Date) => {
     setShowTimePicker(false);
     if (selectedTime) {
       setTime(selectedTime);
@@ -39,22 +53,22 @@ const EditTaskForm = ({ onClose, setTasks, editTaskData }: any) => {
   };
 
   const saveTask = () => {
-    if (!title || !category) {
+    if (!editTaskData || !title || !category) {
       Alert.alert("All fields are required");
       return;
     }
     const updatedTask = {
       id: editTaskData.id,
-      title: title,
-      category: category,
+      title,
+      category,
       date: date.toLocaleDateString(),
       time: time.toLocaleTimeString(),
       status: editTaskData.status,
       icon: { name: "reload", backgroundColor: Colors.statusInProgress },
     };
 
-    setTasks((prevTasks: any) =>
-      prevTasks.map((task: any) =>
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
         task.id === editTaskData.id ? updatedTask : task,
       ),
     );

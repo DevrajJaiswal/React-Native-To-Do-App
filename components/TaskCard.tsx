@@ -11,7 +11,7 @@ import {
   View,
 } from "react-native";
 
-const STATUS_COLOR = {
+const STATUS_COLOR: Record<Task["status"], string> = {
   Done: Colors.statusDone,
   "In Progress": Colors.statusInProgress,
   "To Do": Colors.statusToDo,
@@ -19,16 +19,19 @@ const STATUS_COLOR = {
 
 type TaskCardProps = {
   task: Task;
+  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+  onOpen: () => void;
+  setEditTaskData: React.Dispatch<React.SetStateAction<Task | null>>;
 };
 
 const TaskCard = ({
   task,
   setTasks,
-  setCompletedTasks,
   onOpen,
   setEditTaskData,
-}: any) => {
+}: TaskCardProps) => {
   const [showActions, setShowActions] = useState(false);
+
   const deleteTask = (taskId: string) => {
     Alert.alert("Delete Task", "Are you sure you want to delete this task?", [
       {
@@ -39,9 +42,7 @@ const TaskCard = ({
         text: "Delete",
         style: "destructive",
         onPress: () => {
-          setTasks((current: any) =>
-            current.filter((task: any) => task.id !== taskId),
-          );
+          setTasks((current) => current.filter((item) => item.id !== taskId));
         },
       },
     ]);
@@ -49,22 +50,44 @@ const TaskCard = ({
   };
 
   const markAsDone = (taskId: string) => {
-    setTasks((current: any) =>
-      current.filter((task: any) =>
-        task.id === taskId ? (task.status = "Done") : task,
+    setTasks((current) =>
+      current.map((item) =>
+        item.id === taskId
+          ? {
+              ...item,
+              status: "Done",
+              icon: {
+                ...item.icon,
+                name: "checkmark-circle",
+                backgroundColor: Colors.statusDone,
+              },
+            }
+          : item,
       ),
     );
     setShowActions(false);
   };
+
   const markAsInProgress = (taskId: string) => {
-    setTasks((current: any) =>
-      current.filter((task: any) =>
-        task.id === taskId ? (task.status = "In Progress") : task,
+    setTasks((current) =>
+      current.map((item) =>
+        item.id === taskId
+          ? {
+              ...item,
+              status: "In Progress",
+              icon: {
+                ...item.icon,
+                name: "reload",
+                backgroundColor: Colors.statusInProgress,
+              },
+            }
+          : item,
       ),
     );
     setShowActions(false);
   };
-  const editTask = (taskId: string) => {
+
+  const editTask = () => {
     setEditTaskData(task);
     onOpen();
     setShowActions(false);
@@ -100,10 +123,7 @@ const TaskCard = ({
             />
             <Text style={styles.actionText}>Done</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.actionBtn}
-            onPress={() => editTask(task.id)}
-          >
+          <TouchableOpacity style={styles.actionBtn} onPress={editTask}>
             <Ionicons name="create-outline" size={18} color={Colors.primary} />
             <Text style={styles.actionText}>Edit</Text>
           </TouchableOpacity>

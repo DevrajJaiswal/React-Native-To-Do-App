@@ -3,10 +3,11 @@ import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
-const AddTaskButton = ({ onOpen }: any) => {
-  const addTask = () => {
-    // Alert.alert("Add your task");
-  };
+type AddTaskButtonProps = {
+  onOpen: () => void;
+};
+
+const AddTaskButton = ({ onOpen }: AddTaskButtonProps) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={onOpen}>

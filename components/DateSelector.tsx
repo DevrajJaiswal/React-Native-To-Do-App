@@ -2,15 +2,8 @@ import Colors from "@/constants/Color";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 
-type DateItem = {
-  month: string;
-  day: number;
-  weekday: string;
-  key: string;
-};
-
 const generateDates = () => {
-  const base = new Date(2026, 4, 4);
+  const base = new Date();
   return Array.from({ length: 5 }, (_, i) => {
     const date = new Date(base);
     date.setDate(base.getDate() + i);
@@ -36,7 +29,7 @@ const DateSelector = () => {
       contentContainerStyle={styles.container}
     >
       {DATES.map((item) => {
-        const isSelected = item.key == selectedDate;
+        const isSelected = item.key === selectedDate;
         return (
           <TouchableOpacity
             key={item.key}
