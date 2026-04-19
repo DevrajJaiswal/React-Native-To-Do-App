@@ -1,5 +1,5 @@
 import Colors from "@/constants/Color";
-import React, { useState } from "react";
+import React from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 
 const generateDates = () => {
@@ -11,17 +11,18 @@ const generateDates = () => {
       month: date.toLocaleDateString("en-US", { month: "short" }),
       day: date.getDate(),
       weekday: date.toLocaleDateString("en-US", { weekday: "short" }),
-      key: date.toISOString(),
+      key: date.toISOString().split("T")[0],
     };
   });
 };
 
 const DATES = generateDates();
-const DEFAULT_SELECTED = DATES[2].key;
+type DateSelectorProps = {
+  dateFilter: string;
+  setDateFilter: (date: string) => void;
+};
 
-const DateSelector = () => {
-  const [selectedDate, setSelectedDate] = useState(DEFAULT_SELECTED);
-
+const DateSelector = ({ dateFilter, setDateFilter }: DateSelectorProps) => {
   return (
     <ScrollView
       horizontal
@@ -29,12 +30,14 @@ const DateSelector = () => {
       contentContainerStyle={styles.container}
     >
       {DATES.map((item) => {
-        const isSelected = item.key === selectedDate;
+        const isSelected = item.key === dateFilter;
         return (
           <TouchableOpacity
             key={item.key}
             style={[styles.dateItem, isSelected && styles.dateItemSelected]}
-            onPress={() => setSelectedDate(item.key)}
+            onPress={() => {
+              setDateFilter(item.key);
+            }}
           >
             <Text style={[styles.month, isSelected && styles.selectedText]}>
               {item.month}

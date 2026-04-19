@@ -9,7 +9,7 @@ import Colors from "@/constants/Color";
 import { FilterOptions, TASKS, Task } from "@/constants/tasks";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Index() {
@@ -20,14 +20,22 @@ export default function Index() {
   const [showEditForm, setShowEditForm] = useState(false);
   const [editTaskData, setEditTaskData] = useState<Task | null>(null);
 
+  const [dateFilter, setDateFilter] = useState<string>(
+    new Date().toISOString().split("T")[0],
+  );
+
   const filteredTasks = tasks.filter((task) => {
-    if (activeFilter === "All") return true;
-    return task.status === activeFilter;
+    const matchStatus = activeFilter === "All" || task.status === activeFilter;
+
+    const matchDate = task.date === dateFilter;
+
+    return matchStatus && matchDate;
   });
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <StatusBar style="light" />
+      <Header />
       <FlatList
         data={filteredTasks}
         keyExtractor={(item) => item.id}
@@ -41,20 +49,29 @@ export default function Index() {
         )}
         ListHeaderComponent={
           <>
-            {/* {Header} */}
-            <Header />
-            {/* {DateSelector} */}
-            <DateSelector />
-            {/* {FilterTab} */}
+            <DateSelector
+              dateFilter={dateFilter}
+              setDateFilter={setDateFilter}
+            />
             <FilterTab selected={activeFilter} onSelect={setActiveFilter} />
           </>
         }
+        ListEmptyComponent={
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>
+              😴 No tasks found for selected filter
+            </Text>
+          </View>
+        }
         showsVerticalScrollIndicator={false}
       />
+
       <AddTaskButton onOpen={() => setShowForm(true)} />
+
       {showForm && (
         <AddTaskForm onClose={() => setShowForm(false)} setTasks={setTasks} />
       )}
+
       {showEditForm && (
         <EditTaskForm
           onClose={() => setShowEditForm(false)}
@@ -70,5 +87,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
+  },
+
+  emptyContainer: {
+    alignItems: "center",
+    marginTop: 50,
+  },
+
+  emptyText: {
+    color: Colors.textSecondary,
+    fontSize: 16,
   },
 });
