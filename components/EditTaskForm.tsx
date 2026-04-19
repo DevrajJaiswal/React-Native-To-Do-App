@@ -33,10 +33,14 @@ const EditTaskForm = ({
   );
 
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [date, setDate] = useState<Date>(new Date());
+  const [date, setDate] = useState<Date>(
+    editTaskData ? new Date(editTaskData.date) : new Date(),
+  );
 
   const [showTimePicker, setShowTimePicker] = useState(false);
-  const [time, setTime] = useState<Date>(new Date());
+  const [time, setTime] = useState<Date>(
+    editTaskData ? new Date(editTaskData.time) : new Date(),
+  );
 
   const onChangeDate = (event: DateTimePickerEvent, selectedDate?: Date) => {
     setShowDatePicker(false);
@@ -61,8 +65,8 @@ const EditTaskForm = ({
       id: editTaskData.id,
       title,
       category,
-      date: date.toLocaleDateString(),
-      time: time.toLocaleTimeString(),
+      date: date.toISOString().split("T")[0],
+      time: time.toISOString(),
       status: editTaskData.status,
       icon: { name: "reload", backgroundColor: Colors.statusInProgress },
     };

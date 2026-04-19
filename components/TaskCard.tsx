@@ -24,6 +24,15 @@ type TaskCardProps = {
   setEditTaskData: React.Dispatch<React.SetStateAction<Task | null>>;
 };
 
+const formatDate = (date: string) => new Date(date).toDateString();
+
+const formatTime = (time: string) =>
+  new Date(time).toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+
 const TaskCard = ({
   task,
   setTasks,
@@ -155,7 +164,7 @@ const TaskCard = ({
               color={Colors.primary}
             ></Ionicons>
             <Text style={styles.time}>
-              {task.time} | {task.date}
+              {formatTime(task.time)} | {formatDate(task.date)}
             </Text>
           </View>
 

@@ -52,8 +52,8 @@ const AddTaskForm = ({ onClose, setTasks }: AddTaskFormProps) => {
       id: Date.now().toString(),
       title,
       category,
-      date: date.toLocaleDateString(),
-      time: time.toLocaleTimeString(),
+      date: date.toISOString().split("T")[0],
+      time: time.toISOString(),
       status: "To Do",
       icon: { name: "time", backgroundColor: Colors.statusToDo },
     };
