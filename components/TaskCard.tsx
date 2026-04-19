@@ -247,23 +247,22 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 0,
     top: 0,
+    right: 0,
     flexDirection: "row",
     justifyContent: "space-around",
-    marginTop: 12,
-    borderTopColor: Colors.border,
-    paddingTop: 10,
+    paddingVertical: 10,
+    zIndex: 10,
   },
-
   actionBtn: {
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
     paddingVertical: 6,
-    paddingHorizontal: 12,
+    paddingHorizontal: 5,
     borderRadius: 8,
     backgroundColor: Colors.surfaceLight,
+    flexShrink: 1,
   },
-
   actionText: {
     fontSize: 13,
     fontWeight: "500",
