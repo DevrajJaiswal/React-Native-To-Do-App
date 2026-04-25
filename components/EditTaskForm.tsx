@@ -1,10 +1,12 @@
 import Colors from "@/constants/Color";
 import { Task, TASK_CATEGORIES } from "@/constants/tasks";
+import { db } from "@/FirebaseConfig";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
+import { doc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import {
   Alert,
@@ -18,13 +20,13 @@ import {
 
 type EditTaskFormProps = {
   onClose: () => void;
-  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+  refreshTasks: () => void;
   editTaskData: Task | null;
 };
 
 const EditTaskForm = ({
   onClose,
-  setTasks,
+  refreshTasks,
   editTaskData,
 }: EditTaskFormProps) => {
   const [title, setTitle] = useState(editTaskData?.title ?? "");
@@ -56,27 +58,25 @@ const EditTaskForm = ({
     }
   };
 
-  const saveTask = () => {
+  const saveTask = async () => {
     if (!editTaskData || !title || !category) {
       Alert.alert("All fields are required");
       return;
     }
-    const updatedTask = {
-      id: editTaskData.id,
-      title,
-      category,
-      date: date.toISOString().split("T")[0],
-      time: time.toISOString(),
-      status: editTaskData.status,
-      icon: { name: "reload", backgroundColor: Colors.statusInProgress },
-    };
-
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === editTaskData.id ? updatedTask : task,
-      ),
-    );
-    onClose();
+    try {
+      const updatedTask = {
+        title,
+        category,
+        date: date.toISOString().split("T")[0],
+        time: time.toISOString(),
+        status: editTaskData.status,
+      };
+      await updateDoc(doc(db, "tasks", editTaskData.id), updatedTask);
+      onClose();
+      refreshTasks();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

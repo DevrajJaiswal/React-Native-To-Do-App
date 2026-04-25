@@ -1,8 +1,10 @@
 import Colors from "@/constants/Color";
 import { Task, TASK_CATEGORIES } from "@/constants/tasks";
+import { db } from "@/FirebaseConfig";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
+import { addDoc, collection } from "firebase/firestore";
 import React, { useState } from "react";
 import {
   Alert,
@@ -13,13 +15,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-
 type AddTaskFormProps = {
   onClose: () => void;
-  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+  refreshTasks: () => void;
 };
 
-const AddTaskForm = ({ onClose, setTasks }: AddTaskFormProps) => {
+const AddTaskForm = ({ onClose, refreshTasks }: AddTaskFormProps) => {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState<string>(TASK_CATEGORIES[0].value);
 
@@ -43,22 +44,25 @@ const AddTaskForm = ({ onClose, setTasks }: AddTaskFormProps) => {
     }
   };
 
-  const saveTask = () => {
+  const saveTask = async () => {
     if (!title || !category) {
       Alert.alert("All fields are required");
       return;
     }
-    const newTask: Task = {
-      id: Date.now().toString(),
-      title,
-      category,
-      date: date.toISOString().split("T")[0],
-      time: time.toISOString(),
-      status: "To Do",
-      icon: { name: "time", backgroundColor: Colors.statusToDo },
-    };
-    setTasks((prevTasks) => [...prevTasks, newTask]);
-    onClose();
+    try {
+      const newTask: Omit<Task, "id"> = {
+        title,
+        category,
+        date: date.toISOString().split("T")[0],
+        time: time.toISOString(),
+        status: "To Do",
+      };
+      await addDoc(collection(db, "tasks"), newTask);
+      onClose();
+      refreshTasks();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

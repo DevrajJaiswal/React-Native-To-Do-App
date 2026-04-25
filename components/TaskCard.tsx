@@ -1,6 +1,8 @@
 import Colors from "@/constants/Color";
 import { Task, TASK_CATEGORIES } from "@/constants/tasks";
+import { db } from "@/FirebaseConfig";
 import { Ionicons } from "@expo/vector-icons";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import {
   Alert,
@@ -10,7 +12,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-
 const STATUS_COLOR: Record<Task["status"], string> = {
   Done: Colors.statusDone,
   "In Progress": Colors.statusInProgress,
@@ -19,7 +20,7 @@ const STATUS_COLOR: Record<Task["status"], string> = {
 
 type TaskCardProps = {
   task: Task;
-  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+  refreshTasks: () => void;
   onOpen: () => void;
   setEditTaskData: React.Dispatch<React.SetStateAction<Task | null>>;
 };
@@ -35,12 +36,25 @@ const formatTime = (time: string) =>
 
 const TaskCard = ({
   task,
-  setTasks,
+  refreshTasks,
   onOpen,
   setEditTaskData,
 }: TaskCardProps) => {
   const [showActions, setShowActions] = useState(false);
 
+  let badgeBgColor;
+  let iconName;
+
+  if (task.status === "To Do") {
+    badgeBgColor = Colors.statusToDo;
+    iconName = "time";
+  } else if (task.status === "In Progress") {
+    badgeBgColor = Colors.statusInProgress;
+    iconName = "reload";
+  } else {
+    badgeBgColor = Colors.statusDone;
+    iconName = "checkmark-circle";
+  }
   const deleteTask = (taskId: string) => {
     Alert.alert("Delete Task", "Are you sure you want to delete this task?", [
       {
@@ -50,49 +64,40 @@ const TaskCard = ({
       {
         text: "Delete",
         style: "destructive",
-        onPress: () => {
-          setTasks((current) => current.filter((item) => item.id !== taskId));
+        onPress: async () => {
+          try {
+            await deleteDoc(doc(db, "tasks", taskId));
+            refreshTasks();
+          } catch (error) {
+            console.log(error);
+          }
         },
       },
     ]);
     setShowActions(false);
   };
 
-  const markAsDone = (taskId: string) => {
-    setTasks((current) =>
-      current.map((item) =>
-        item.id === taskId
-          ? {
-              ...item,
-              status: "Done",
-              icon: {
-                ...item.icon,
-                name: "checkmark-circle",
-                backgroundColor: Colors.statusDone,
-              },
-            }
-          : item,
-      ),
-    );
+  const markAsDone = async (taskId: string) => {
+    try {
+      await updateDoc(doc(db, "tasks", taskId), {
+        status: "Done",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    refreshTasks();
     setShowActions(false);
   };
 
-  const markAsInProgress = (taskId: string) => {
-    setTasks((current) =>
-      current.map((item) =>
-        item.id === taskId
-          ? {
-              ...item,
-              status: "In Progress",
-              icon: {
-                ...item.icon,
-                name: "reload",
-                backgroundColor: Colors.statusInProgress,
-              },
-            }
-          : item,
-      ),
-    );
+  const markAsInProgress = async (taskId: string) => {
+    try {
+      await updateDoc(doc(db, "tasks", taskId), {
+        status: "In Progress",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    refreshTasks();
     setShowActions(false);
   };
 
@@ -173,17 +178,8 @@ const TaskCard = ({
           </Text>
         </View>
       </View>
-      <View
-        style={[
-          styles.iconBadge,
-          { backgroundColor: task.icon.backgroundColor },
-        ]}
-      >
-        <Ionicons
-          name={task.icon.name as any}
-          size={18}
-          color={Colors.textPrimary}
-        />
+      <View style={[styles.iconBadge, { backgroundColor: badgeBgColor }]}>
+        <Ionicons name={iconName as any} size={18} color={Colors.textPrimary} />
       </View>
     </Pressable>
   );

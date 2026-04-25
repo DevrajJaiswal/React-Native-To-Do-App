@@ -6,20 +6,34 @@ import FilterTab from "@/components/FilterTab";
 import Header from "@/components/Header";
 import TaskCard from "@/components/TaskCard";
 import Colors from "@/constants/Color";
-import { FilterOptions, TASKS, Task } from "@/constants/tasks";
+import { FilterOptions, Task } from "@/constants/tasks";
+import { db } from "@/FirebaseConfig";
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Index() {
-  const [tasks, setTasks] = useState(TASKS);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const insets = useSafeAreaInsets();
   const [activeFilter, setActiveFilter] = useState<FilterOptions>("All");
   const [showForm, setShowForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [editTaskData, setEditTaskData] = useState<Task | null>(null);
+  const getTasks = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "tasks"));
 
+      const data = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as Omit<Task, "id">),
+      }));
+      setTasks(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const [dateFilter, setDateFilter] = useState<string>(
     new Date().toISOString().split("T")[0],
   );
@@ -32,6 +46,9 @@ export default function Index() {
     return matchStatus && matchDate;
   });
 
+  useEffect(() => {
+    getTasks();
+  }, []);
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <StatusBar style="light" />
@@ -42,7 +59,7 @@ export default function Index() {
         renderItem={({ item }) => (
           <TaskCard
             task={item}
-            setTasks={setTasks}
+            refreshTasks={getTasks}
             onOpen={() => setShowEditForm(true)}
             setEditTaskData={setEditTaskData}
           />
@@ -69,13 +86,16 @@ export default function Index() {
       <AddTaskButton onOpen={() => setShowForm(true)} />
 
       {showForm && (
-        <AddTaskForm onClose={() => setShowForm(false)} setTasks={setTasks} />
+        <AddTaskForm
+          onClose={() => setShowForm(false)}
+          refreshTasks={getTasks}
+        />
       )}
 
       {showEditForm && (
         <EditTaskForm
           onClose={() => setShowEditForm(false)}
-          setTasks={setTasks}
+          refreshTasks={getTasks}
           editTaskData={editTaskData}
         />
       )}

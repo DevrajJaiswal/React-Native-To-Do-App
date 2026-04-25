@@ -1,10 +1,5 @@
 export type TaskStatus = "Done" | "In Progress" | "To Do";
 
-export type TaskIcon = {
-  name: string;
-  backgroundColor: string;
-};
-
 export type Task = {
   id: string;
   category: string;
@@ -12,7 +7,6 @@ export type Task = {
   date: string;
   time: string;
   status: TaskStatus;
-  icon: TaskIcon;
 };
 
 export const TASKS: Task[] = [
@@ -23,7 +17,6 @@ export const TASKS: Task[] = [
     date: "2026-04-19",
     time: "2026-04-11T16:00:00.000Z",
     status: "To Do",
-    icon: { name: "time", backgroundColor: "#EF4444" },
   },
   {
     id: "2",
@@ -32,7 +25,6 @@ export const TASKS: Task[] = [
     date: "2026-04-20",
     time: "2026-04-11T11:30:00.000Z",
     status: "In Progress",
-    icon: { name: "reload", backgroundColor: "#F59E0B" },
   },
   {
     id: "3",
@@ -41,7 +33,6 @@ export const TASKS: Task[] = [
     date: "2026-04-21",
     time: "2026-04-11T13:00:00.000Z",
     status: "Done",
-    icon: { name: "checkmark-circle", backgroundColor: "#22C55E" },
   },
 ];
 
