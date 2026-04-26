@@ -1,6 +1,12 @@
-# React Native To-Do App
+# React Native To Do App
 
 A task manager mobile app built with React Native, Expo Router, and Firebase Firestore.
+
+## Download APK
+
+Download the latest Android APK:
+
+- [Download APK (Latest Release)](https://expo.dev/artifacts/eas/poNkbxXJtvi9NVnNT94ZCt.apk)
 
 ## Features
 
@@ -81,3 +87,11 @@ Then open on:
 - 🤖 `npm run android` - Start directly on Android
 - 🍎 `npm run ios` - Start directly on iOS
 - 🌐 `npm run web` - Start for web
+
+## Build APK
+
+Use EAS to build an APK:
+
+```bash
+eas build -p android --profile preview
+```
